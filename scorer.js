@@ -122,6 +122,7 @@ function scoreSetting(syllables, notes, alignment) {
       label: syl.label,
       shape: syl.shape,
       unknown: !!syl.unknown,
+      trailing: syl.trailing || "",
       noteSpan: [first, last],
       notes: notes.slice(first, last + 1),
       melody: direction,
@@ -167,26 +168,24 @@ function withRate(t) {
 }
 
 /**
- * Ranking key, best first (RATE FIRST):
- *   1. eligible before ineligible — a setting whose melody engages too few
- *      of the voice-moving transitions dodged the test (settingEligibility)
- *   2. conflict rate among CONSTRAINED transitions, lower is better; a null
- *      rate (nothing tested) ranks after every real rate
+ * Ranking key, best first (FEWEST CONFLICTS FIRST):
+ *   1. eligible before ineligible — the coverage floor is the gate: a
+ *      setting whose melody engages too few of the voice-moving transitions
+ *      dodged the test (settingEligibility)
+ *   2. fewest contrary transitions — a setting with zero conflicts mangles
+ *      nothing; one with two mangles two words
  *   3. total primary severity
  *   4. secondary (melisma) conflicts
- *   5. MORE constrained transitions — between equal rates, the setting that
- *      faced and passed more tests is the stronger evidence
+ *   5. MORE constrained transitions, as a tie-break only. Extra engaged
+ *      transitions describe how hard the melody worked, not how well the
+ *      result serves the singer, so they never compensate for a conflict.
  *
- * So once the coverage floor is met, zero conflicts beats any conflict, and
- * an alignment cannot climb by parking a passing transition on a repeated
- * note (that lowers key 5 without touching key 2). `net` is still reported.
+ * `rate` and `net` are still reported.
  */
 function compareTotals(a, b) {
   const ea = settingEligibility(a).eligible ? 0 : 1;
   const eb = settingEligibility(b).eligible ? 0 : 1;
-  const ra = a.rate === null ? Infinity : a.rate;
-  const rb = b.rate === null ? Infinity : b.rate;
-  return ea - eb || ra - rb || a.severity - b.severity || a.secondary - b.secondary || b.constrained - a.constrained;
+  return ea - eb || a.conflicts - b.conflicts || a.severity - b.severity || a.secondary - b.secondary || b.constrained - a.constrained;
 }
 
 function addTotals(a, b) {

@@ -91,6 +91,7 @@ function syllabify(text) {
 module.exports = {
   id: "zh",
   name: "Mandarin",
+  file: "tone/mandarin.js",
   TONES,
   SUPPLEMENT,
   syllabify,

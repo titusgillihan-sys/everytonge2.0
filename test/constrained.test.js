@@ -37,7 +37,7 @@ test("a flat tone transition is unconstrained whatever the melody does", () => {
   assert.strictEqual(r.totals.constrained, 0);
 });
 
-test("ranking: rate first; a setting that avoids the test cannot win it", () => {
+test("ranking: fewest conflicts first; engaged transitions only break ties", () => {
   const T = (constrained, conflicts, severity) =>
     scorer.withRate({ transitions: 8, voiceMoving: 8, constrained, conflicts, severity, secondary: 0 });
   const untested = T(0, 0, 0);
@@ -49,7 +49,10 @@ test("ranking: rate first; a setting that avoids the test cannot win it", () => 
   assert.ok(scorer.compareTotals(few, untested) < 0, "four passes beat nothing tested");
   assert.ok(scorer.compareTotals(many, few) < 0, "at equal rate, seven passes beat four");
   assert.ok(scorer.compareTotals(many, oneMiss) < 0, "seven passes beat six passes and a miss");
-  assert.ok(scorer.compareTotals(few, oneMiss) < 0, "RATE FIRST: zero conflicts on four beats one conflict on seven");
+  assert.ok(scorer.compareTotals(few, oneMiss) < 0, "zero conflicts on four beats one conflict on seven");
+  const twoOfMany = T(8, 2, 2);
+  const oneOfFew = T(4, 1, 4);
+  assert.ok(scorer.compareTotals(oneOfFew, twoOfMany) < 0, "one conflict beats two even at a worse rate and higher severity");
   assert.ok(scorer.compareTotals(oneMiss, dodged) < 0, "but a setting below the coverage floor ranks after any eligible one");
 });
 

@@ -177,7 +177,7 @@ async function search({ passage, melodies, toneModule, baselineMelodyId, model, 
 
   // Model verdict on the chunkings, one call per melody, AFTER the DP.
   for (const a of attempts) {
-    if (a.ineligible) continue;
+    if (a.ineligible || a.infeasible) continue;
     a.verdictOnChunkings =
       chunking === "dp" && a.chunkings.length > 1
         ? await model.rankChunkings({
@@ -189,7 +189,7 @@ async function search({ passage, melodies, toneModule, baselineMelodyId, model, 
   }
 
   const settled = attempts.map((a) => {
-    if (a.ineligible) return a;
+    if (a.ineligible || a.infeasible) return a;
     const { melody, chunkings, melodyCheck, verdictOnChunkings: v } = a;
     const rank = new Map(v.order.map((idx, r) => [idx, r]));
     const unnatural = new Set(v.unnatural || []);

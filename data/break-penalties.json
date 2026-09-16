@@ -1,11 +1,46 @@
 {
   "_comment": "UNVERIFIED, pending a native speaker. These numbers are a prior about where a singer would take a breath, not a verdict; the model reranks the chunker's top segmentations. Units are arbitrary and only ratios matter. breakAfter: cost of ending a chunk after a syllable whose trailing punctuation has this class. runOver: cost of singing across punctuation of this class inside a chunk. lengthMismatch[d]: cost when a chunk's syllable count differs from its phrase's note count by d; a difference beyond the table is forbidden (align.js MAX_COUNT_DIFF).",
-  "breakAfter": { "sentence": 0, "clause": 1, "comma": 2, "none": 8 },
-  "runOver": { "sentence": 6, "clause": 2, "comma": 0, "none": 0 },
-  "lengthMismatch": [0, 1, 3],
+  "status": "unverified",
+  "validation": {
+    "ask": [
+      "Which is worse for a singer: taking a breath where there is no punctuation at all, or singing straight through a full stop without breathing?",
+      "How much worse is a breath in the middle of a clause than a breath at a comma: a little, or a lot?",
+      "Is a breath at a semicolon or colon as natural as at a full stop, or closer to a comma?"
+    ],
+    "assumed": "Breath at a full stop costs 0, at a semicolon/colon 1, at a comma 2, with no punctuation 8; singing through a full stop costs 6, through a semicolon/colon 2, through a comma 0."
+  },
+  "breakAfter": {
+    "sentence": 0,
+    "clause": 1,
+    "comma": 2,
+    "none": 8
+  },
+  "runOver": {
+    "sentence": 6,
+    "clause": 2,
+    "comma": 0,
+    "none": 0
+  },
+  "lengthMismatch": [
+    0,
+    1,
+    3
+  ],
   "punctuationClass": {
-    ".": "sentence", "!": "sentence", "?": "sentence", "。": "sentence", "！": "sentence", "？": "sentence",
-    ";": "clause", ":": "clause", "；": "clause", "：": "clause", "—": "clause", "–": "clause",
-    ",": "comma", "，": "comma", "、": "comma"
+    ".": "sentence",
+    "!": "sentence",
+    "?": "sentence",
+    "。": "sentence",
+    "！": "sentence",
+    "？": "sentence",
+    ";": "clause",
+    ":": "clause",
+    "；": "clause",
+    "：": "clause",
+    "—": "clause",
+    "–": "clause",
+    ",": "comma",
+    "，": "comma",
+    "、": "comma"
   }
 }

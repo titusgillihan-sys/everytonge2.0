@@ -1,5 +1,14 @@
 {
   "_comment": "UNVERIFIED, pending a native speaker and a musician. A transition is CONSTRAINED only when the melody moves at least melodyMoveSemitones and the voice moves at least speechMoveLevels (Chao levels) between the two syllables; anything else is neither a pass nor a fail and is reported as unconstrained. A melody is ELIGIBLE only if, across its phrases, at least minMovingFraction of adjacent note pairs move and its range spans at least minRangeSemitones; below that it is reported as ineligible, never as optimal, because a drone avoids every test. A setting is eligible only if the melody engages (constrains) at least minConstrainedFraction of the transitions where the VOICE moves; transitions where the voice is flat are not in the denominator because no melody can engage them. This stops an alignment winning by parking tone changes on repeated notes.",
+  "status": "unverified",
+  "validation": {
+    "ask": [
+      "For a tune to count as a real melody rather than a chant: is it enough that half of its note-to-note steps move, over a range of five semitones (a fourth)?",
+      "For a setting to count as tested: is it enough that the tune moves on half of the places where the spoken tones change?",
+      "Is any change of note (one semitone) a real move for a singer, or should very small steps count as flat?"
+    ],
+    "assumed": "minMovingFraction 0.5, minRangeSemitones 5, minConstrainedFraction 0.5, melodyMoveSemitones 1, speechMoveLevels 1."
+  },
   "speechMoveLevels": 1,
   "melodyMoveSemitones": 1,
   "minMovingFraction": 0.5,

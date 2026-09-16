@@ -124,10 +124,30 @@ function syllabify(text) {
   return out;
 }
 
+/**
+ * What a native speaker must confirm about TONES, one entry per tone, in
+ * the words the checklist asks. status flips to "verified" here, and the
+ * shape above changes, when the answer comes back.
+ */
+const VALIDATION = {
+  status: "unverified",
+  region: "Northern (Hanoi) values; ask which region the speaker is from and whether hỏi and ngã sound different to them.",
+  tones: {
+    ngang: { example: "ma", assumed: "starts mid, stays level", ask: "Does your voice stay level, neither rising nor falling?" },
+    huyen: { example: "mà", assumed: "starts low-mid, falls to low", ask: "Does your voice start fairly low and fall further?" },
+    sac:   { example: "má", assumed: "starts mid, rises high", ask: "Does your voice start in the middle and rise clearly high?" },
+    hoi:   { example: "mả", assumed: "starts mid, ends LOW (the rise back up at the end is ignored)", ask: "Does your voice fall and then come back up, or just fall? In a song, which end matters?" },
+    nga:   { example: "mã", assumed: "same pitch path as má (mid to high), glottal break ignored", ask: "Apart from the catch in the throat, does mã end as high as má?" },
+    nang:  { example: "mạ", assumed: "same pitch path as mà (low, falling), glottal stop ignored", ask: "Apart from the cut-off, does mạ sit as low as mà?" },
+  },
+};
+
 module.exports = {
   id: "vi",
   name: "Vietnamese",
+  file: "tone/vietnamese.js",
   TONES,
+  VALIDATION,
   TONE_MARKS,
   readTone,
   syllabify,

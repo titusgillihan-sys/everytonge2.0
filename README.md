@@ -137,7 +137,7 @@ node cli/report.js --json
 | File | What it is |
 |---|---|
 | `tone/vietnamese.js`, `tone/mandarin.js`, `tone/index.js` | Tone modules behind one interface. Vietnamese reads the five combining marks; Mandarin wraps the dictionary and sandhi. |
-| `scorer.js`, `data/scoring-thresholds.json` | Language-agnostic contrary-motion scorer over Chao shapes. Same transition rule as `shared.js`; a parity test holds them equal. Counts conflicts against CONSTRAINED transitions only (both melody and voice move), ranks by passes minus conflicts, and applies a melodic-interest floor so a drone is ineligible rather than optimal. Thresholds are an unverified table. |
+| `scorer.js`, `data/scoring-thresholds.json` | Language-agnostic contrary-motion scorer over Chao shapes. Same transition rule as `shared.js`; a parity test holds them equal. Counts conflicts against CONSTRAINED transitions only (both melody and voice move). The coverage floor is the gate; among settings that clear it, fewest conflicts wins outright and engaged transitions only break ties. A melodic-interest floor makes a drone ineligible rather than optimal. Thresholds are an unverified table. |
 | `chunker.js`, `data/break-penalties.json` | Exact k-best DP over break positions, melody-aware (chunk lengths fit the cycled phrase lengths). The penalty table is an unverified prior. |
 | `align.js` | Bounded syllable-to-note alignment (melisma ≤ 2, note-sharing ≤ 2, count difference ≤ 2) and the naive baseline. |
 | `search.js` | Melody × chunking × alignment search per version, and `searchTranslations` as the outer loop over versions (lever 1). Empty result set when nothing beats the baseline. |
@@ -147,7 +147,20 @@ node cli/report.js --json
 | `data/passages/` | Public-domain passages as verbatim verses; some keep stage-one hand chunks for comparison. |
 | `cli/report.js` | The report: baseline against best setting, per-syllable breakdown. |
 
+### Self-eval set
+
+`node eval/run.js` runs a hand-built set of cases (`eval/cases.json`), not a
+benchmark. Every expectation was written from the design before the case
+was run. Failures are reported with what they reveal and are not tuned away;
+a case marked `knownFailing` keeps its principled expectation.
+
 ### Unverified, on purpose
+
+Every unverified value is flagged in its data file, listed at the end of every
+report next to the result that depends on it (`unverified.js`), and collected
+into [VALIDATION.md](VALIDATION.md), one page ordered so a short call with a
+Vietnamese speaker resolves the most. Regenerate it with
+`node cli/checklist.js > VALIDATION.md`; a test fails when it is stale.
 
 - **Melody note lists are encoded from memory.** Every melody is `verified: false`
   and carries a `confidenceNote` naming the phrases most likely to be wrong.

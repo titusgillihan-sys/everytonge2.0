@@ -20,6 +20,7 @@ const { loadMelodies, noteName } = require("../melodies.js");
 const { forLanguage } = require("../tone/index.js");
 const { describeAlignment } = require("../align.js");
 const { search, searchTranslations } = require("../search.js");
+const { dependenciesOf } = require("../unverified.js");
 
 function parseArgs(argv) {
   const args = { passage: "psalm-23-vi1925", melody: "new-britain", json: false, list: false, chunks: null,
@@ -156,9 +157,11 @@ function render(out, melodies) {
     }
   }
   L.push("");
-  L.push("Caveats: melody note lists are encoded from memory and unverified; the Vietnamese tone pitch");
-  L.push("table (tone/vietnamese.js), the break penalties and the scoring thresholds are unvalidated");
-  L.push("priors; no flagged conflict is a confirmed real-world case until a fluent speaker has heard it.");
+  L.push("UNVERIFIED VALUES THIS RESULT DEPENDS ON (ask about them with VALIDATION.md):");
+  for (const d of dependenciesOf(out)) {
+    L.push(`  - [${d.status}] ${d.title}  (${d.file}; ${d.because})`);
+  }
+  L.push("  No flagged conflict is a confirmed real-world case until a fluent speaker has heard it.");
   return L.join("\n");
 }
 

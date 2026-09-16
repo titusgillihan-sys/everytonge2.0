@@ -1,0 +1,456 @@
+{
+  "_comment": "HAND-BUILT SELF-EVAL SET, NOT A BENCHMARK. Every `expect` was written from what the design says should happen BEFORE the case was run, never by recording current behaviour. Inline `text` passages are test text, not Scripture, and are never displayed as Scripture. A case with `knownFailing` still keeps its principled expectation; the field only records that the failure is known and what it reveals, so the suite stays informative without tuning the system.",
+  "cases": [
+    {
+      "id": "vi-psalm23-1-2-realign",
+      "why": "The headline demo: re-alignment alone should all but eliminate contrary motion on a short passage.",
+      "passage": {
+        "fixture": "psalm-23-vi1925"
+      },
+      "melodies": "all",
+      "baseline": "new-britain",
+      "expect": {
+        "baselineConflictsGt": 0,
+        "improves": true,
+        "winnerConflictsLte": 1
+      }
+    },
+    {
+      "id": "vi-psalm23-1-4-cycles",
+      "why": "A passage longer than the tune must cycle the phrase list, still improve, and never break a hyphenated name.",
+      "passage": {
+        "fixture": "psalm-23-1-4-vi1925"
+      },
+      "melodies": "all",
+      "baseline": "new-britain",
+      "expect": {
+        "improves": true,
+        "winnerChunksGt": 4,
+        "winnerConflictsLte": 3,
+        "noBreakInsideHyphenated": true
+      }
+    },
+    {
+      "id": "vi-john316-hu-mat-break",
+      "why": "A breath must never split the compound 'hư mất' (perish). The penalty table only knows punctuation, so this is where the chunker or the model rerank must save it.",
+      "passage": {
+        "fixture": "john-3-16-vi1925"
+      },
+      "melodies": "all",
+      "baseline": "new-britain",
+      "expect": {
+        "improves": true,
+        "noBreakInside": "hư mất"
+      },
+      "knownFailing": "The winning setting breaks inside 'hư mất' (perish). The break-penalty table only knows punctuation, so two mid-clause breaks cost the same and the aligner picks the one that sings better. Fixes belong to the data (a word-group lexicon or a penalty for splitting a compound) or to the model's chunk-break rerank, which exists for this; the stub keeps DP order. Not tuned away."
+    },
+    {
+      "id": "vi-baseline-already-clean",
+      "why": "All-level-tone text (every syllable ngang) has no voice movement, so nothing is constrained and nothing can beat the baseline: the result set must be empty, not a relabelled baseline.",
+      "passage": {
+        "text": "ta đi chăn chiên trên non xanh tươi",
+        "language": "vi",
+        "label": "test text, not Scripture"
+      },
+      "melodies": [
+        "new-britain"
+      ],
+      "baseline": "new-britain",
+      "expect": {
+        "baselineConflicts": 0,
+        "results": 0,
+        "hasFailure": true
+      }
+    },
+    {
+      "id": "vi-no-setting-fits",
+      "why": "Four syllables cannot fit tunes whose first phrase has 7-9 notes within the alignment bound; every melody is infeasible and the tool must say so, not invent a setting.",
+      "passage": {
+        "text": "Chúa ở cùng tôi",
+        "language": "vi",
+        "label": "fragment of Psalm 23:4 VI1925"
+      },
+      "melodies": [
+        "new-britain",
+        "ode-to-joy",
+        "ah-vous-dirai-je"
+      ],
+      "baseline": "new-britain",
+      "expect": {
+        "results": 0,
+        "allInfeasible": true,
+        "failureMentions": "alignment bound"
+      }
+    },
+    {
+      "id": "vi-drone-ineligible",
+      "why": "A monotone drone has zero contrary motion by construction and must be reported ineligible, never as the winner.",
+      "passage": {
+        "fixture": "psalm-23-vi1925"
+      },
+      "melodies": [
+        "new-britain"
+      ],
+      "baseline": "new-britain",
+      "extraMelodies": [
+        {
+          "id": "drone",
+          "name": "Drone",
+          "phrases": [
+            [
+              60,
+              60,
+              60,
+              60,
+              60,
+              60,
+              60,
+              60,
+              60
+            ]
+          ]
+        }
+      ],
+      "expect": {
+        "ineligible": [
+          "drone"
+        ],
+        "winnerNotMelody": "drone"
+      }
+    },
+    {
+      "id": "vi-chant-ineligible-range",
+      "why": "A chant that moves on every step but only over two semitones still avoids the test and must be ineligible under the range floor.",
+      "passage": {
+        "fixture": "psalm-23-vi1925"
+      },
+      "melodies": [
+        "new-britain"
+      ],
+      "baseline": "new-britain",
+      "extraMelodies": [
+        {
+          "id": "chant",
+          "name": "Chant",
+          "phrases": [
+            [
+              60,
+              62,
+              60,
+              62,
+              60,
+              62,
+              60,
+              62,
+              60
+            ]
+          ]
+        }
+      ],
+      "expect": {
+        "ineligible": [
+          "chant"
+        ]
+      }
+    },
+    {
+      "id": "vi-nursery-tune-not-winner",
+      "why": "With fewest-conflicts ranking and engaged transitions as tie-break, a tune whose steps are half repeats should not beat a hymn tune that reaches the same conflict count.",
+      "passage": {
+        "fixture": "psalm-23-vi1925"
+      },
+      "melodies": "all",
+      "baseline": "new-britain",
+      "expect": {
+        "winnerNotMelody": "ah-vous-dirai-je"
+      }
+    },
+    {
+      "id": "vi-synthetic-not-winner",
+      "why": "Mechanically tone-rotated text must not outrank real Scripture on the translation lever.",
+      "passage": {
+        "key": "PSA.23.1-2",
+        "language": "vi",
+        "versions": "all",
+        "includeSynthetic": true
+      },
+      "melodies": "all",
+      "baseline": "new-britain",
+      "baselineVersion": "VI1925",
+      "expect": {
+        "improves": true,
+        "winnerVersion": "VI1925"
+      }
+    },
+    {
+      "id": "vi-contrary-up",
+      "why": "sắc ends high (5), huyền starts low (2): the voice falls 3. A rising melody step is contrary, severity 3.",
+      "passage": {
+        "text": "má mà",
+        "language": "vi",
+        "label": "test syllables"
+      },
+      "melodies": [],
+      "extraMelodies": [
+        {
+          "id": "up",
+          "name": "Up",
+          "phrases": [
+            [
+              60,
+              67
+            ]
+          ]
+        }
+      ],
+      "baseline": "up",
+      "expect": {
+        "baselineConstrained": 1,
+        "baselineConflicts": 1,
+        "baselineSeverity": 3
+      }
+    },
+    {
+      "id": "vi-with-the-voice",
+      "why": "The same pair under a falling melody step moves with the voice: constrained, no conflict.",
+      "passage": {
+        "text": "má mà",
+        "language": "vi",
+        "label": "test syllables"
+      },
+      "melodies": [],
+      "extraMelodies": [
+        {
+          "id": "down",
+          "name": "Down",
+          "phrases": [
+            [
+              67,
+              60
+            ]
+          ]
+        }
+      ],
+      "baseline": "down",
+      "expect": {
+        "baselineConstrained": 1,
+        "baselineConflicts": 0
+      }
+    },
+    {
+      "id": "vi-flat-melody-unconstrained",
+      "why": "A repeated note constrains nothing: not a pass, not a fail.",
+      "passage": {
+        "text": "má mà",
+        "language": "vi",
+        "label": "test syllables"
+      },
+      "melodies": [],
+      "extraMelodies": [
+        {
+          "id": "flat",
+          "name": "Flat",
+          "phrases": [
+            [
+              60,
+              60
+            ]
+          ]
+        }
+      ],
+      "baseline": "flat",
+      "expect": {
+        "baselineConstrained": 0,
+        "baselineConflicts": 0
+      }
+    },
+    {
+      "id": "vi-hoi-ends-low-assumption",
+      "why": "Under the UNVERIFIED table hỏi ends low (1) and sắc starts mid (3): the voice rises 2, so a falling step is contrary, severity 2. If the speaker says hỏi rises back up, this case should start failing and the table must change.",
+      "passage": {
+        "text": "mả má",
+        "language": "vi",
+        "label": "test syllables"
+      },
+      "melodies": [],
+      "extraMelodies": [
+        {
+          "id": "down",
+          "name": "Down",
+          "phrases": [
+            [
+              67,
+              60
+            ]
+          ]
+        }
+      ],
+      "baseline": "down",
+      "expect": {
+        "baselineConflicts": 1,
+        "baselineSeverity": 2
+      }
+    },
+    {
+      "id": "vi-hyphen-under-short-phrases",
+      "why": "Stille Nacht's 3-4 note phrases force many breaks; none may fall inside Giê-hô-va.",
+      "passage": {
+        "fixture": "psalm-23-1-4-vi1925"
+      },
+      "melodies": [
+        "stille-nacht"
+      ],
+      "baseline": "stille-nacht",
+      "expect": {
+        "noBreakInsideHyphenated": true
+      }
+    },
+    {
+      "id": "vi-verbatim",
+      "why": "Chunk texts rejoined must equal the provider's text exactly: no rewording anywhere in the pipeline.",
+      "passage": {
+        "fixture": "psalm-23-1-4-vi1925"
+      },
+      "melodies": "all",
+      "baseline": "new-britain",
+      "expect": {
+        "verbatim": true
+      }
+    },
+    {
+      "id": "vi-alignment-bounds",
+      "why": "No syllable over more than 2 notes, no note under more than 2 syllables, in any winning setting.",
+      "passage": {
+        "fixture": "psalm-23-1-4-vi1925"
+      },
+      "melodies": "all",
+      "baseline": "new-britain",
+      "expect": {
+        "boundsRespected": true
+      }
+    },
+    {
+      "id": "vi-single-syllable-empty",
+      "why": "One syllable fits no phrase in the library; every melody is infeasible and the result set is empty.",
+      "passage": {
+        "text": "Chúa",
+        "language": "vi",
+        "label": "test syllable"
+      },
+      "melodies": "all",
+      "baseline": "new-britain",
+      "expect": {
+        "results": 0,
+        "allInfeasible": true
+      }
+    },
+    {
+      "id": "vi-copyright-on-report",
+      "why": "Wherever Bible content appears the version's notice must appear.",
+      "passage": {
+        "fixture": "psalm-23-vi1925"
+      },
+      "melodies": "all",
+      "baseline": "new-britain",
+      "expect": {
+        "reportContains": "Public Domain"
+      }
+    },
+    {
+      "id": "zh-psalm23-improves",
+      "why": "Mandarin through the same engine: the baseline must have conflicts and a setting must improve on it.",
+      "passage": {
+        "fixture": "psalm-23-cuvs"
+      },
+      "melodies": "all",
+      "baseline": "new-britain",
+      "expect": {
+        "language": "zh",
+        "baselineConflictsGt": 0,
+        "improves": true,
+        "winnerConflictsLte": 2
+      }
+    },
+    {
+      "id": "zh-sandhi-scored",
+      "why": "你好 is spoken ní hǎo: 你 rises to 5, 好 starts at 2, so the voice falls 3 and a rising step is contrary with severity 3. Without sandhi both would be tone 3 and the voice would rise 1, giving no conflict; this case fails if sandhi is ever dropped.",
+      "passage": {
+        "text": "你好",
+        "language": "zh",
+        "label": "test text"
+      },
+      "melodies": [],
+      "extraMelodies": [
+        {
+          "id": "up",
+          "name": "Up",
+          "phrases": [
+            [
+              60,
+              64
+            ]
+          ]
+        }
+      ],
+      "baseline": "up",
+      "expect": {
+        "baselineConflicts": 1,
+        "baselineSeverity": 3
+      }
+    },
+    {
+      "id": "zh-falling-falling-descending",
+      "why": "Two 4th tones: the first ends at 1, the second starts at 5, so the voice leaps up 4; a descending step is contrary with severity 4 (FINDINGS.md).",
+      "passage": {
+        "text": "圣善",
+        "language": "zh",
+        "label": "test text"
+      },
+      "melodies": [],
+      "extraMelodies": [
+        {
+          "id": "down",
+          "name": "Down",
+          "phrases": [
+            [
+              67,
+              60
+            ]
+          ]
+        }
+      ],
+      "baseline": "down",
+      "expect": {
+        "baselineConflicts": 1,
+        "baselineSeverity": 4
+      }
+    },
+    {
+      "id": "zh-neutral-never-flagged",
+      "why": "A neutral-tone syllable has no shape, so the transition into it is unconstrained whatever the melody does.",
+      "passage": {
+        "text": "我的",
+        "language": "zh",
+        "label": "test text"
+      },
+      "melodies": [],
+      "extraMelodies": [
+        {
+          "id": "up",
+          "name": "Up",
+          "phrases": [
+            [
+              60,
+              67
+            ]
+          ]
+        }
+      ],
+      "baseline": "up",
+      "expect": {
+        "baselineConstrained": 0,
+        "baselineConflicts": 0
+      }
+    }
+  ]
+}
