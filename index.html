@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Every Tongue — tone/melody mismatch demo</title>
+  <title>Every Tongue — Scripture Integrity Song Finder</title>
   <link rel="stylesheet" href="style.css?v=2" />
 </head>
 <body>
@@ -20,15 +20,35 @@
   <div class="wrap">
     <header class="hero">
       <h1>Every Tongue</h1>
+      <p class="eyebrow">Scripture Integrity Song Finder</p>
       <p class="pitch">
-        In Mandarin, the pitch of a word isn't just tone of voice — it's part of the word's
-        meaning. When a hymn's melody doesn't match those pitches, the lyrics can quietly turn
-        into different words. Every Tongue finds exactly where that happens, and suggests a fix.
+        In tonal languages, the pitch of a word isn't tone of voice — it's part of the word's
+        meaning. When Scripture is set to a melody, the tune can force the voice onto pitches the
+        language doesn't want, quietly distorting the words being sung. That matters because song,
+        not text, is how many oral, low-literacy communities actually learn and remember Scripture.
+        Every Tongue finds the existing, vetted translation and existing melody where the tune
+        fights the language the least — and flags exactly where it doesn't.
       </p>
     </header>
 
+    <section class="card constraints-card">
+      <div class="constraints-label">Two hard constraints</div>
+      <div class="constraints-grid">
+        <div class="constraint">
+          <h3>No generated translation</h3>
+          <p>Every word shown comes from an existing, published, vetted translation — never
+          AI-authored Scripture.</p>
+        </div>
+        <div class="constraint">
+          <h3>No generated melody</h3>
+          <p>Every tune is an existing, known melody. Any wording swap is a human-reviewed
+          suggestion, never auto-applied.</p>
+        </div>
+      </div>
+    </section>
+
     <section class="card example-teaser">
-      <div class="example-teaser-label">One example</div>
+      <div class="example-teaser-label">One worked example</div>
       <div class="example-teaser-song">"Amazing Grace," sung in Mandarin</div>
       <div class="example-teaser-line">奇异恩典，何等甘甜</div>
       <div class="example-teaser-swap">
@@ -42,11 +62,11 @@
     <section class="card cta-row">
       <a class="cta-card" href="process.html">
         <h3>How it works →</h3>
-        <p>The three-part idea behind the check, in plain English.</p>
+        <p>The idea behind the check, in plain English.</p>
       </a>
       <a class="cta-card" href="library.html">
         <h3>Browse the library →</h3>
-        <p>See hymn lines already checked for tone/melody mismatches.</p>
+        <p>See settings already checked for tone/melody conflicts.</p>
       </a>
       <a class="cta-card" href="upload.html">
         <h3>Analyze your own line →</h3>
@@ -55,8 +75,11 @@
     </section>
 
     <footer class="note">
-      MVP scope: Mandarin Chinese only. See <a href="process.html">How it works</a> for the
-      methodology and a verification caveat on the demo data.
+      This demo runs on Mandarin hymn examples as a working proof of the checking engine; the same
+      contrary-motion approach is built to extend to any tonal language with tone-marked text (an
+      offline Vietnamese Scripture engine already runs from the command line — see the repo). See
+      <a href="process.html">How it works</a> for the methodology and a verification caveat on the
+      demo data.
     </footer>
   </div>
 </body>
